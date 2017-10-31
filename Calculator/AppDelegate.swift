@@ -2,7 +2,7 @@
 //  AppDelegate.swift
 //  Calculator
 //
-//  Created by Soeng Saravit on 10/29/17.
+//  Created by Tem Channat on 10/29/17.
 //  Copyright © 2017 Tem Channat. All rights reserved.
 //
 
