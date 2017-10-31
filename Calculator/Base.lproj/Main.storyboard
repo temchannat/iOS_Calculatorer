@@ -319,6 +319,9 @@
                                         <real key="value" value="35"/>
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="numblerClick:" destination="BYZ-38-t0r" eventType="touchUpInside" id="8Sa-OF-Uef"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="x4P-V0-ZBg" customClass="customButton" customModule="Calculator" customModuleProvider="target">
                                 <rect key="frame" x="289" y="554" width="70" height="70"/>

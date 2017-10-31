@@ -22,8 +22,7 @@ class ViewController: UIViewController {
     var operation: String = ""
     var calculatedOperation = ""
     var isEqualPressed: Bool = false
-    
-   
+    var isPointPressed: Bool = false
     
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -37,44 +36,62 @@ class ViewController: UIViewController {
     
     @IBAction func numblerClick(_ sender: UIButton) {
         let countDigit = currentNumberLabel.text!.count + 1
-//        print(countDigit)
+        var digit = sender.currentTitle!
+        
+        // check if POINT is aready pressed, if it pressed then not allow it to press any more
+        if digit == "." && isPointPressed == true {
+            digit = ""
+        }
+        
         if countDigit <= 11 {
             if currentNumberLabel.text == "0" {
-                currentNumberLabel.text = sender.currentTitle!
+                if digit == "." {
+                    currentNumberLabel.text = "0\(digit)"
+                    isPointPressed = true
+                } else {
+                    currentNumberLabel.text = digit
+                }
             } else {
-                currentNumberLabel.text = currentNumberLabel.text! + sender.currentTitle!
+                currentNumberLabel.text = currentNumberLabel.text! + digit
             }
         }
+       
     }
     
     @IBAction func equalClick(_ sender: Any) {
         
         isEqualPressed = true
-
-        if currentNumberLabel.text == "0" {
+        let currentNumber = Double(currentNumberLabel.text!)!
+        
+        let status = statusLabel.text!
+        
+        
+        if currentNumberLabel.text == "0" && status == "" {
             currentNumberLabel.text = String(format: "%g", result)
         } else {
-            statusLabel.text = statusLabel.text! + currentNumberLabel.text!
+            statusLabel.text = status + currentNumberLabel.text!
+            
             switch operation {
             case "+":
-                result += Double(currentNumberLabel.text!)!
+                result += currentNumber
             case "-":
-                result -= Double(currentNumberLabel.text!)!
+                result -= currentNumber
             case "×":
-                result *= Double(currentNumberLabel.text!)!
+                result *= currentNumber
             case "÷":
-                if Double(currentNumberLabel.text!)! == 0 {
+                // check if number is devided by ZERO then set label to ∞
+                if currentNumber == 0 && status.last == "÷"{
                     currentNumberLabel.text = "∞"
                      statusLabel.text = "∞"
                     return
                 }
-                result /= Double(currentNumberLabel.text!)!
-//            case "%":
-//                let a = statusLabel.text!
-//                let b = Double(currentNumberLabel.text!)!
-//                print("a : \(a)")
-//                print("b : \(b)")
-//                result = a.truncatingRemainder(dividingBy: b)
+                result /= currentNumber
+            case "%":
+                if currentNumber >= result {
+                    result = 0
+                    break
+                }
+                result = result.truncatingRemainder(dividingBy: currentNumber)
             default:
                 print("Something is wroing")
             }
@@ -96,7 +113,7 @@ class ViewController: UIViewController {
             calculatedOperation = ""
         }
         
-        if currentNumber != 0 && statusLabel.text != " " {
+        if currentNumber != 0 {
             
             if operation != "+/-" {
                 if statusLabel.text! == "" {
@@ -120,7 +137,6 @@ class ViewController: UIViewController {
                 return
             }
 
-       
             switch calculatedOperation {
             case "+":
                 result += currentNumber
@@ -131,10 +147,6 @@ class ViewController: UIViewController {
                 currentNumberLabel.text = "0"
                 
             case "×":
-//                print("work")
-//                if result == 0 {
-//                    result = 1
-//                }
                 result *= currentNumber
                 currentNumberLabel.text = "0"
                 
@@ -152,10 +164,8 @@ class ViewController: UIViewController {
 
             print("result:  \(result)")
             calculatedOperation = sender.currentTitle!
-
         }
         
-       
     }
     
     
@@ -166,6 +176,7 @@ class ViewController: UIViewController {
         result = 0
         operation = ""
         calculatedOperation = ""
+        isPointPressed = false
         
     }
     
