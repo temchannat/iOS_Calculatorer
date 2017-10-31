@@ -21,6 +21,8 @@ class ViewController: UIViewController {
     var result: Double = 0
     var operation: String = ""
     var calculatedOperation = ""
+    var isEqualPressed: Bool = false
+    
    
     
     
@@ -47,9 +49,10 @@ class ViewController: UIViewController {
     
     @IBAction func equalClick(_ sender: Any) {
         
+        isEqualPressed = true
 
         if currentNumberLabel.text == "0" {
-            currentNumberLabel.text = String(result)
+            currentNumberLabel.text = String(format: "%g", result)
         } else {
             statusLabel.text = statusLabel.text! + currentNumberLabel.text!
             switch operation {
@@ -73,37 +76,48 @@ class ViewController: UIViewController {
 //                print("b : \(b)")
 //                result = a.truncatingRemainder(dividingBy: b)
             default:
-                print("")
+                print("Something is wroing")
             }
             
-            
-            
-            
-            print(result)
-//            var re = String(result)
-//            if let i = re.characters.index(of: ".") {
-//
-//                print("===> \(i)")
-//            }
-            
-            statusLabel.text = "\(statusLabel.text!) = \(String(format: "%.02f", result))"
-            currentNumberLabel.text = String(format: "%.02f", result)
+            // Display result to label
+            statusLabel.text = "\(statusLabel.text!) = \(String(format: "%g", result))"
+            currentNumberLabel.text = String(format: "%g", result)
         }
         
     }
     
     @IBAction func operationClick(_ sender: UIButton) {
         currentNumber = Double(currentNumberLabel.text!)!
+        operation = sender.currentTitle!
+        if isEqualPressed == true {
+            statusLabel.text = ""
+            isEqualPressed = false
+            result = 0
+            calculatedOperation = ""
+        }
         
         if currentNumber != 0 && statusLabel.text != " " {
-            operation = sender.currentTitle!
+            
             if operation != "+/-" {
                 if statusLabel.text! == "" {
-                    statusLabel.text = currentNumberLabel.text! + sender.currentTitle!
+                    statusLabel.text = currentNumberLabel.text! + operation
                 } else {
                     statusLabel.text = statusLabel.text! + currentNumberLabel.text! + operation
                     currentNumber = Double(currentNumberLabel.text!)!
                 }
+            }
+            
+            // Check if the digit is +/-, then change its symbole
+            if operation == "+/-" {
+                var curNumber: String = currentNumberLabel.text!
+                
+                if let i = curNumber.characters.index(of: "-") {
+                    curNumber.remove(at: i)
+                    currentNumberLabel.text = curNumber
+                } else {
+                    currentNumberLabel.text = "-\(curNumber)"
+                }
+                return
             }
 
        
@@ -118,9 +132,9 @@ class ViewController: UIViewController {
                 
             case "×":
 //                print("work")
-                if result == 0 {
-                    result = 1
-                }
+//                if result == 0 {
+//                    result = 1
+//                }
                 result *= currentNumber
                 currentNumberLabel.text = "0"
                 
@@ -130,15 +144,7 @@ class ViewController: UIViewController {
                 }
                 result /= currentNumber
                 currentNumberLabel.text = "0"
-            case "+/-":
-                var curNumber: String = currentNumberLabel.text!
-                
-                if let i = curNumber.characters.index(of: "-") {
-                    curNumber.remove(at: i)
-                    currentNumberLabel.text = curNumber
-                } else {
-                     currentNumberLabel.text = "-\(curNumber)"
-                }
+           
             default:
                 result = currentNumber
                 currentNumberLabel.text = "0"
